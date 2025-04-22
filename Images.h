@@ -5,8 +5,7 @@
 #include <QImage>
 #include <QString>
 
-class Images
-{
+class Images {
 
 public:
     void load();

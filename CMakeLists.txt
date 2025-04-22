@@ -24,7 +24,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         resources.qrc
-        images.h images.cpp
+        Images.h Images.cpp
+        Field.h Field.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET SeaBattle APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
