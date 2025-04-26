@@ -19,6 +19,11 @@ enum Cell {
 
 class Field {
 
+    QImage *image;
+    Images *pictures;
+    QVector<Cell> field;
+    int left,top,width,height;
+
 public:
     Field(Images* images,int lft, int tp,int wdth,int hght);
     ~Field();
@@ -34,12 +39,6 @@ public:
     void clear();
     int getX();
     int getY();
-
-private:
-    QImage *image;
-    Images *pictures;
-    QVector<Cell> field;
-    int left,top,width,height;
 };
 
 #endif // FIELD_H

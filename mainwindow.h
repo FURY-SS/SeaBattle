@@ -5,6 +5,7 @@
 #include "Images.h"
 #include "Field.h"
 #include <QMouseEvent>
+#include "player.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,6 +24,16 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
+    Ui::MainWindow *ui;
+    Images *pictures;
+    Field *myField, *enemyField;
+    State state;
+    HumanPlayer *humanPlayer;
+    AIPlayer *aiPlayer;
+    int shipsToPlace[4]; // Количество кораблей каждого типа для размещения [1-палубные, 2-палубные и т.д.]
+    int currentShipSize; // Размер текущего размещаемого корабля
+    bool isHorizontal;   // Ориентация текущего корабля
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -30,11 +41,13 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override; // Добавляем обработчик нажатия клавиш
 
 private:
-    Ui::MainWindow *ui;
-    Images *pictures;
-    Field *myField, *enemyField;
-    State state;
+    bool canPlaceShip(int x, int y, int size, bool horizontal); // Проверка возможности размещения корабля
+    void placeShip(int x, int y, int size, bool horizontal);    // Размещение корабля на поле
+    void updateShipsToPlace();                                  // Обновление информации о кораблях для размещения
+    void startGame();                                           // Начало игры после размещения всех кораблей
 };
+
 #endif // MAINWINDOW_H

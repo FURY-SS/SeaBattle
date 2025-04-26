@@ -6,13 +6,11 @@
 #include <QString>
 
 class Images {
+    QMap<QString,QImage> images;
 
 public:
     void load();
     QImage& get(const QString& imgName);
-
-private:
-    QMap<QString,QImage> images;
 };
 
 #endif // IMAGES_H
