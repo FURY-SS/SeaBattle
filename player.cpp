@@ -1,14 +1,8 @@
 #include "Player.h"
-#include "ShotsStrategy.h"
 
 Player::Player(Field* field) : field(field), shotStrategy(nullptr) {}
 
-Player::~Player() {
-    for (Ship* ship : ships) {
-        delete ship;
-    }
-    delete shotStrategy;
-}
+Player::~Player() {}
 
 void Player::createFleet() {
     ships.append(createShip(4));
@@ -43,11 +37,18 @@ HumanPlayer::HumanPlayer(Field* field) : Player(field) {
 }
 
 Ship* HumanPlayer::createShip(int w) {
-    if (w == 1) return new OnePartShip();
-    if (w == 2) return new TwoPartShip();
-    if (w == 3) return new ThreePartShip();
-    if (w == 4) return new FourPartShip();
-    return nullptr;
+    switch (w) {
+    case 1:
+        return new OnePartShip();
+    case 2:
+        return new TwoPartShip();
+    case 3:
+        return new ThreePartShip();
+    case 4:
+        return new FourPartShip();
+    default:
+        return nullptr;
+    }
 }
 
 AIPlayer::AIPlayer(Field* field) : Player(field) {
@@ -55,9 +56,16 @@ AIPlayer::AIPlayer(Field* field) : Player(field) {
 }
 
 Ship* AIPlayer::createShip(int w) {
-    if (w == 1) return new OnePartShip();
-    if (w == 2) return new TwoPartShip();
-    if (w == 3) return new ThreePartShip();
-    if (w == 4) return new FourPartShip();
-    return nullptr;
+    switch (w) {
+    case 1:
+        return new OnePartShip();
+    case 2:
+        return new TwoPartShip();
+    case 3:
+        return new ThreePartShip();
+    case 4:
+        return new FourPartShip();
+    default:
+        return nullptr;
+    }
 }

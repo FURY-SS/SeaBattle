@@ -30,7 +30,8 @@ class MainWindow : public QMainWindow {
     State state;
     HumanPlayer *humanPlayer;
     AIPlayer *aiPlayer;
-    int shipsToPlace[4]; // Количество кораблей каждого типа для размещения [1-палубные, 2-палубные и т.д.]
+
+    int shipsToPlace[4]; // Количество кораблей каждого типа
     int currentShipSize; // Размер текущего размещаемого корабля
     bool isHorizontal;   // Ориентация текущего корабля
 
@@ -41,7 +42,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override; // Добавляем обработчик нажатия клавиш
+    void keyPressEvent(QKeyEvent *event) override; //обработчик нажатия клавиш
 
 private:
     bool canPlaceShip(int x, int y, int size, bool horizontal); // Проверка возможности размещения корабля

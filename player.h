@@ -5,8 +5,7 @@
 #include <QPoint>
 #include "Field.h"
 #include "Ship.h"
-
-class ShotsStrategy;
+#include "shotsstrategy.h"
 
 class Player {
 public:
@@ -17,6 +16,7 @@ public:
     void createFleet();
     Field* getField();
     bool performShot(QPoint point);
+    const QVector<Ship*>& getShips() const { return ships; }
 
 protected:
     Field* field;

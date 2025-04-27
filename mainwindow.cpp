@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     myField = new Field(pictures,42,39,216,217);
     enemyField = new Field(pictures,330,46,216,217);
 
+    humanPlayer = new HumanPlayer(myField);
+
     // Инициализация количества кораблей для размещения
     shipsToPlace[0] = 4;
     shipsToPlace[1] = 3;
@@ -47,19 +49,34 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
 
     if (state == ST_PLACING_SHIPS) {
         QPoint point = myField->getCoord(pos.x(), pos.y());
-        if (point.x() == -1) {
-            return;
-        }
+        if (point.x() == -1) return;
 
-        // Проверяем, можно ли разместить корабль
         if (canPlaceShip(point.x(), point.y(), currentShipSize, isHorizontal)) {
+            // Демонстрация фабричного метода
+            Ship* newShip = humanPlayer->createShip(currentShipSize);
+            if (!newShip) {
+                QMessageBox::warning(this, "Ошибка", "Не удалось создать корабль");
+                return;
+            }
+
+            // Устанавливаем параметры корабля
+            newShip->setCoords(point);
+            newShip->setOrientation(isHorizontal);
+
+            // Размещаем на поле
             placeShip(point.x(), point.y(), currentShipSize, isHorizontal);
 
-            // Переходим к следующему кораблю
+            // Выводим информацию о созданном корабле
+            QString shipInfo = QString("Создан корабль: %1-палубный, ориентация %2")
+                                   .arg(currentShipSize)
+                                   .arg(isHorizontal ? "горизонтальная" : "вертикальная");
+            ui->statusbar->showMessage(shipInfo, 3000); // Показываем 3 секунды
+
+            // Обновляем интерфейс
             shipsToPlace[currentShipSize-1]--;
             updateShipsToPlace();
 
-            // Ищем следующий размер корабля, который нужно разместить
+            // Ищем следующий корабль
             currentShipSize = 0;
             for (int i = 3; i >= 0; --i) {
                 if (shipsToPlace[i] > 0) {
@@ -68,15 +85,14 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
                 }
             }
 
-            // Если все корабли размещены, начинаем игру
             if (currentShipSize == 0) {
                 startGame();
             }
         } else {
             QMessageBox::warning(this, "Ошибка", "Невозможно разместить корабль здесь!");
         }
-    }
-    else if (state == ST_MAKING_STEP) {
+
+    } else if (state == ST_MAKING_STEP) {
         QPoint point = enemyField->getCoord(pos.x(), pos.y());
         if (point.x() == -1){
             return;
@@ -108,9 +124,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 bool MainWindow::canPlaceShip(int x, int y, int size, bool horizontal) {
     // Проверяем, что корабль помещается в поле
     if (horizontal) {
-        if (x + size > 10) return false;
+        if (x + size > 10) {
+            return false;
+        }
     } else {
-        if (y + size > 10) return false;
+        if (y + size > 10) {
+            return false;
+        }
     }
 
     // Проверяем соседние клетки на наличие других кораблей
@@ -155,4 +175,3 @@ void MainWindow::startGame() {
     QMessageBox::information(this, "Начало игры", "Все корабли размещены! Игра начинается.");
     ui->statusbar->showMessage("Ваш ход. Стреляйте по полю противника.");
 }
-

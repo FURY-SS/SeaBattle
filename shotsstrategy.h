@@ -25,4 +25,5 @@ public:
     RandomShotStrategy(Field* field) : ShotsStrategy(field) {}
     QPoint makeShot(QPoint point) override;
 };
+
 #endif // SHOTSSTRATEGY_H

@@ -1,6 +1,4 @@
 #include "shotsstrategy.h"
-
-#include "ShotsStrategy.h"
 #include <QRandomGenerator>
 #include <QDebug>
 
@@ -16,7 +14,6 @@ QPoint RandomShotStrategy::makeShot(QPoint) {
     int x = QRandomGenerator::global()->bounded(10);
     int y = QRandomGenerator::global()->bounded(10);
 
-    // Ensure we don't shoot the same spot twice
     while (field->getCell(x, y) != CL_CLEAR) {
         x = QRandomGenerator::global()->bounded(10);
         y = QRandomGenerator::global()->bounded(10);
