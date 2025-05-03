@@ -5,6 +5,13 @@ Player::Player(Field* field) : field(field), shotStrategy(nullptr) {}
 Player::~Player() {}
 
 void Player::createFleet() {
+
+    for (Ship* ship : ships) {
+        delete ship;
+    }
+
+    ships.clear();
+
     ships.append(createShip(4));
 
     for (int i = 0; i < 2; i++) {

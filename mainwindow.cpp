@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     enemyField = new Field(pictures,330,46,216,217);
 
     humanPlayer = new HumanPlayer(myField);
+    aiPlayer = new AIPlayer(myField);
+
+    gameController = new GameController(humanPlayer, aiPlayer);
 
     // Инициализация количества кораблей для размещения
     shipsToPlace[0] = 4;
@@ -21,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     currentShipSize = 4; // Начинаем с самого большого корабля
     isHorizontal = true; // По умолчанию горизонтальная ориентация
 
-    state = ST_PLACING_SHIPS;
+    state = SHIPS_PLACING;
 
     myField->redraw();
     enemyField->redraw();
@@ -47,7 +50,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
     QPoint pos = ev->pos();
     pos.setY(pos.y() - this->menuBar()->geometry().height());
 
-    if (state == ST_PLACING_SHIPS) {
+    if (state == SHIPS_PLACING) {
         QPoint point = myField->getCoord(pos.x(), pos.y());
         if (point.x() == -1) return;
 
@@ -92,7 +95,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
             QMessageBox::warning(this, "Ошибка", "Невозможно разместить корабль здесь!");
         }
 
-    } else if (state == ST_MAKING_STEP) {
+    } else if (state == PLAYER_TURN) {
         QPoint point = enemyField->getCoord(pos.x(), pos.y());
         if (point.x() == -1){
             return;
@@ -115,7 +118,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     // Обработка смены ориентации корабля при нажатии пробела
-    if (event->key() == Qt::Key_Space && state == ST_PLACING_SHIPS) {
+    if (event->key() == Qt::Key_Space && state == SHIPS_PLACING) {
         isHorizontal = !isHorizontal;
         QMessageBox::information(this, "Информация", isHorizontal ? "Горизонтальная ориентация" : "Вертикальная ориентация");
     }
@@ -171,7 +174,7 @@ void MainWindow::updateShipsToPlace() {
 }
 
 void MainWindow::startGame() {
-    state = ST_MAKING_STEP;
+    state = PLAYER_TURN;
     QMessageBox::information(this, "Начало игры", "Все корабли размещены! Игра начинается.");
     ui->statusbar->showMessage("Ваш ход. Стреляйте по полю противника.");
 }
