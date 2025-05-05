@@ -8,37 +8,36 @@
 #include <QPoint>
 #include <QString>
 #include "Images.h"
+#include "ship.h"
 
 // Состояния клетки поля
 enum Cell {
-    CL_CLEAR = 0,
-    CL_SHIP,
-    CL_DOT,
-    CL_HALF
+    EMPTY,
+    DOT,
+    SHIP,
+    DEAD,
+    DAMAGED
 };
 
 class Field {
-
-    QImage *image;
-    Images *pictures;
-    QVector<Cell> field;
-    int left,top,width,height;
+    QVector<Cell> cells;
+    QVector<Ship*> flot;
 
 public:
-    Field(Images* images,int lft, int tp,int wdth,int hght);
-    ~Field();
+    Field();
 
-    const QImage& getImage() const;
-    void redraw();
-    Cell getCell( int x, int y );
-    void setCell( int x, int y, Cell cell );
+    void addShip(Ship* ship);
+    void setCellState(QPoint point, Cell state);
+    Cell getCellState(QPoint point);
+    void printBoardStates();
 
-    QString getField();
-    QPoint getCoord(int x, int y);
+    QVector<Cell> getCells();
 
+    QVector<Ship *> getFlot();
+    void prettyPrintFlot();
     void clear();
-    int getX();
-    int getY();
+
+    Ship *getShipByCell(QPoint point);
 };
 
 #endif // FIELD_H

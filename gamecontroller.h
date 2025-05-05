@@ -21,6 +21,11 @@ public:
     void createFleets();
     void swapGameState();
 
+    bool checkShipPlacement(Player* player);
+    bool canPlaceShip(Player* player, int x, int y, int size, bool horizontal);
+    void randomPlaceShips(Player* player);
+    bool validateShipPlacement(Player* player);
+
 private:
     GameState gameState;
     Player* player;

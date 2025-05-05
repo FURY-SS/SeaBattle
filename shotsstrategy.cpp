@@ -1,7 +1,7 @@
 #include "shotsstrategy.h"
 #include <QRandomGenerator>
 #include <QDebug>
-
+/*
 QPoint ManualShotStrategy::makeShot(QPoint point) {
     if (point.x() == -1 || point.y() == -1) {
         qDebug() << "Invalid shot coordinates";
@@ -21,3 +21,4 @@ QPoint RandomShotStrategy::makeShot(QPoint) {
 
     return QPoint(x, y);
 }
+*/

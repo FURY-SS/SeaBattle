@@ -1,109 +1,95 @@
 #include "Field.h"
 
-Field::Field(Images* images,int lft, int tp,int wdth,int hgh): pictures(images), left(lft), top(tp), width(wdth), height(hgh) {
-    field.fill(CL_CLEAR,100);
-    image = new QImage(width,height,QImage::Format_ARGB32);
+Field::Field() {
+    cells.fill(EMPTY, 100);
 }
 
-Field::~Field() {
-    delete image;
+void Field::addShip(Ship *ship) {
+    flot.push_back(ship);
 }
 
-const QImage& Field::getImage() const {
-    return *image;
+void Field::setCellState(QPoint point, Cell state) {
+    if (point.x() < 10 && point.x() >= 0 && point.y() < 10 && point.y() >= 0) {
+        cells[point.x() + 10 * point.y()] = state;
+    }
 }
 
-void Field::redraw() {
-    image->fill(0);
-    QPainter painter(image);
-    double cfx = width/10.0;
-    double cfy = height/10.0;
+Cell Field::getCellState(QPoint point) {
+    if (point.x() > 9 || point.y() > 9 || point.x() < 0 || point.y() < 0) {
+        return Cell::EMPTY;
+    }
 
-    for (int i=0;i<10;i++) {
-        for (int j=0;j<10;j++) {
-            switch(getCell(i,j)) {
-            case CL_DOT:
-                painter.drawImage(i*cfx,j*cfy,pictures->get("dot"));
-                break;
+    return cells[point.x() + 10 * point.y()];
+}
 
-            case CL_HALF:
-                painter.drawImage(i*cfx,j*cfy,pictures->get("half"));
-                break;
-
-            case CL_SHIP:
-                painter.drawImage(i*cfx,j*cfy,pictures->get("full"));
-                break;
-
-            default: break;
-            }
+void Field::printBoardStates() {
+    // Вывод игрового поля в виде матрицы
+    for (int i = 0; i < 10; i++) {
+        QString str = "";
+        for (int j = 0; j < 10; j++) {
+            str += QString::number(cells[i * 10 + j]) + " ";
         }
+        qDebug() << str;
     }
+    qDebug() << "\n";
 }
 
-Cell Field::getCell(int x, int y) {
-    int n = y * 10 + x;
+QVector<Cell> Field::getCells() {
+    return cells;
+}
 
-    if(n >= 0 && n < field.size()) {
-        return field[n];
+QVector<Ship *> Field::getFlot() {
+    return flot;
+}
+
+void Field::prettyPrintFlot() {
+    for (Ship* ship : flot) {
+        qDebug() << "w:" << ship->getWeight() << ", " << ship->getCoords();
     }
-
-    qDebug() << "ERROR: no such cell";
-    return CL_CLEAR;
-}
-
-void Field::setCell(int x, int y, Cell cell) {
-
-    int n = y * 10 + x;
-
-    if (n>=0 && n<field.size()) {
-        field[n]=cell;
-
-        return;
-    }
-
-    qDebug() << "ERROR: no such cell";
-}
-
-int Field::getX() {
-    return left;
-}
-
-int Field::getY() {
-    return top;
-}
-
-QString Field::getField() {
-    QString result;
-
-    for(QVector<Cell>::iterator i = field.begin(); i != field.end(); i++) {
-        if( *i == CL_CLEAR ) {
-            result += "0";
-        } else {
-            result += "1";
-        }
-    }
-
-    return result;
 }
 
 void Field::clear() {
-    field.fill(CL_CLEAR, 100);
+    for (Cell &cell : cells) {
+        cell = Cell::EMPTY;
+    }
 }
 
-QPoint Field::getCoord(int x, int y) {
-    QPoint res;
-    res.setX(-1);
-    res.setY(-1);
-
-    if (x<left || x>(left+width) || y<top || y>(top+height)) {
-        return res;
+Ship *Field::getShipByCell(QPoint point) {
+    // Проверка: если переданная клетка не содержит корабля, вывод сообщения
+    if (getCellState(point) != Cell::SHIP) {
+        qDebug() << "В функцию getShipByCell передана клетка без корабля!";
+        return nullptr;
     }
 
-    double cfx = width/10.0;
-    double cfy = height/10.0;
+    // Проверка на то, что мы как раз тыкнули на нос корабля
+    for (Ship* ship : flot) {
+        if (ship->getCoords() == point) {
+            return ship;
+        }
+    }
 
-    res.setX((x-left)/cfx);
-    res.setY((y-top)/cfy);
+    // Если корабль расположен горизонтально: ищем нос слева
+    if (getCellState(QPoint(point.x() - 1, point.y())) == Cell::SHIP || getCellState(QPoint(point.x() - 1, point.y())) == Cell::DAMAGED) {
+        while (true) {
+            point = QPoint(point.x() - 1, point.y());
+            for (Ship* ship : flot) {
+                if (ship->getCoords() == point) {
+                    return ship;
+                }
+            }
+        }
+    } else {
+        // Вертикальное расположение: ищем нос сверху
+        while (true) {
+            point = QPoint(point.x(), point.y() - 1);
+            for (Ship* ship : flot) {
+                if (ship->getCoords() == point) {
+                    return ship;
+                }
+            }
+        }
+    }
 
-    return res;
+    qDebug() << "Не нашел корабль..";
+    return nullptr;
 }

@@ -2,33 +2,44 @@
 #include "./ui_mainwindow.h"
 #include <QMessageBox>
 
+/*
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     pictures = new Images;
     pictures->load();
 
     myField = new Field(pictures,42,39,216,217);
-    enemyField = new Field(pictures,330,46,216,217);
+    enemyField = new Field(pictures,324,39,216,217);
 
     humanPlayer = new HumanPlayer(myField);
-    aiPlayer = new AIPlayer(myField);
+    aiPlayer = new AIPlayer(enemyField);
 
     gameController = new GameController(humanPlayer, aiPlayer);
 
-    // Инициализация количества кораблей для размещения
-    shipsToPlace[0] = 4;
-    shipsToPlace[1] = 3;
-    shipsToPlace[2] = 2;
-    shipsToPlace[3] = 1;
-
-    currentShipSize = 4; // Начинаем с самого большого корабля
-    isHorizontal = true; // По умолчанию горизонтальная ориентация
-
-    state = SHIPS_PLACING;
-
-    myField->redraw();
+    // Автоматически размещаем корабли бота
+    gameController->randomPlaceShips(aiPlayer);
     enemyField->redraw();
 
+    // Инициализация количества кораблей для размещения игроком
+    shipsToPlace[0] = 4;  // 1-палубные
+    shipsToPlace[1] = 3;  // 2-палубные
+    shipsToPlace[2] = 2;  // 3-палубные
+    shipsToPlace[3] = 1;  // 4-палубные
+
+    currentShipSize = 0;
+    // Находим первый корабль для размещения (начиная с самых больших)
+    for (int i = 3; i >= 0; --i) {
+        if (shipsToPlace[i] > 0) {
+            currentShipSize = i+1;
+            break;
+        }
+    }
+
+    isHorizontal = true;
+    state = SHIPS_PLACING;
+
+    myField->clear();
+    myField->redraw();
     updateShipsToPlace();
 }
 
@@ -55,7 +66,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
         if (point.x() == -1) return;
 
         if (canPlaceShip(point.x(), point.y(), currentShipSize, isHorizontal)) {
-            // Демонстрация фабричного метода
+
             Ship* newShip = humanPlayer->createShip(currentShipSize);
             if (!newShip) {
                 QMessageBox::warning(this, "Ошибка", "Не удалось создать корабль");
@@ -178,3 +189,4 @@ void MainWindow::startGame() {
     QMessageBox::information(this, "Начало игры", "Все корабли размещены! Игра начинается.");
     ui->statusbar->showMessage("Ваш ход. Стреляйте по полю противника.");
 }
+*/

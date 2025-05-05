@@ -1,5 +1,5 @@
 #include "Player.h"
-
+/*
 Player::Player(Field* field) : field(field), shotStrategy(nullptr) {}
 
 Player::~Player() {}
@@ -76,3 +76,4 @@ Ship* AIPlayer::createShip(int w) {
         return nullptr;
     }
 }
+*/
