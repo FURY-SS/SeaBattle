@@ -1,24 +1,15 @@
 #include "shotsstrategy.h"
-#include <QRandomGenerator>
-#include <QDebug>
-/*
-QPoint ManualShotStrategy::makeShot(QPoint point) {
-    if (point.x() == -1 || point.y() == -1) {
-        qDebug() << "Invalid shot coordinates";
-        return QPoint(-1, -1);
-    }
+#include <ctime>
+#include <cstdlib>
+
+QPoint ManualShotStrategy::shot(QPoint point) {
+
     return point;
 }
 
-QPoint RandomShotStrategy::makeShot(QPoint) {
-    int x = QRandomGenerator::global()->bounded(10);
-    int y = QRandomGenerator::global()->bounded(10);
+QPoint RandomShotStrategy::shot(QPoint) {
 
-    while (field->getCell(x, y) != CL_CLEAR) {
-        x = QRandomGenerator::global()->bounded(10);
-        y = QRandomGenerator::global()->bounded(10);
-    }
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    return QPoint(x, y);
+    return QPoint(std::rand() % 10, std::rand() % 10);
 }
-*/

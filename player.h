@@ -4,35 +4,39 @@
 #include <QVector>
 #include <QPoint>
 #include "Field.h"
-#include "Ship.h"
 #include "shotsstrategy.h"
 
 class Player {
+protected:
+    Field* field;
+    ShotsStrategy* strategy;
+
 public:
-    Player(Field* field);
+    Player();
     virtual ~Player();
 
     virtual Ship* createShip(int w) = 0;
     void createFleet();
-    Field* getField();
-    bool performShot(QPoint point);
-    const QVector<Ship*>& getShips() const { return ships; }
+    Field *getField();
+    QPoint performShot(QPoint point = QPoint(-1, -1));
 
-protected:
-    Field* field;
-    QVector<Ship*> ships;
-    ShotsStrategy* shotStrategy;
+
 };
 
 class HumanPlayer : public Player {
 public:
-    HumanPlayer(Field* field);
+    HumanPlayer() {
+        strategy = new ManualShotStrategy();
+    }
+
     Ship* createShip(int w) override;
 };
 
 class AIPlayer : public Player {
 public:
-    AIPlayer(Field* field);
+    AIPlayer() {
+        strategy = new RandomShotStrategy();
+    }
     Ship* createShip(int w) override;
 };
 

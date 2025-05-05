@@ -29,7 +29,7 @@ public:
     void addShip(Ship* ship);
     void setCellState(QPoint point, Cell state);
     Cell getCellState(QPoint point);
-    void printBoardStates();
+    void printFieldStates();
 
     QVector<Cell> getCells();
 

@@ -1,84 +1,113 @@
-//#include "gamecontroller.h"
-#include "QRandomGenerator"
+#include "gamecontroller.h"
 
-/*
-GameController::GameController(Player* human, Player* ai)
-    : player(human), bot(ai), gameState(SHIPS_PLACING), infoLabel(nullptr) {}
+GameController::GameController() {
+    gameState = GameState::SHIPS_PLACING;
 
-GameController::~GameController() {
-    // Игроки удаляются в MainWindow
+    player = new HumanPlayer();
+    bot = new AIPlayer();
+
+    createFlots();
 }
 
-GameState GameController::getGameState() const {
+GameController::~GameController() {
+    delete player;
+    delete bot;
+}
+
+GameState GameController::getGameState() {
     return gameState;
 }
 
-void GameController::setGameState(GameState newState) {
-    gameState = newState;
-}
-
-void GameController::createFleets() {
+void GameController::createFlots() {
     player->createFleet();
     bot->createFleet();
 }
 
-void GameController::swapGameState() {
-    if (gameState == ENEMY_TURN)
-        setGameState(PLAYER_TURN);
-    else if (gameState == PLAYER_TURN)
-        setGameState(ENEMY_TURN);
-}
+int getShipCellsCount(Player* somePlayer) {
+    int count = 0;
 
-bool GameController::canPlaceShip(Player* player, int x, int y, int size, bool horizontal) {
-    Field* field = player->getField();
+    Field* field = somePlayer->getField();
 
-    // Проверяем границы поля
-    if (horizontal) {
-        if (x + size > 10) return false;
-    } else {
-        if (y + size > 10) return false;
-    }
-
-    // Проверяем соседние клетки
-    for (int i = -1; i <= (horizontal ? size : 1); ++i) {
-        for (int j = -1; j <= (horizontal ? 1 : size); ++j) {
-            int checkX = x + i;
-            int checkY = y + j;
-
-            if (checkX >= 0 && checkX < 10 && checkY >= 0 && checkY < 10) {
-                if (Field->getCell(checkX, checkY) == CL_SHIP) {
-                    return false;
-                }
-            }
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            if (field->getCellState(QPoint(j, i)) == Cell::SHIP)
+                count++;
         }
     }
 
-    return true;
+    return count;
 }
 
-void GameController::randomPlaceShips(Player* player) {
-    Field* field = player->getField();
-    field->clear();
-
-    // Размещаем корабли в случайных позициях
-    int sizes[] = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
-
-    for (int size : sizes) {
-        bool placed = false;
-        while (!placed) {
-            int x = QRandomGenerator::global()->bounded(10);
-            int y = QRandomGenerator::global()->bounded(10);
-            bool horizontal = QRandomGenerator::global()->bounded(2) == 0;
-
-            if (canPlaceShip(player, x, y, size, horizontal)) {
-                for (int i = 0; i < size; i++) {
-                    int shipX = horizontal ? x + i : x;
-                    int shipY = horizontal ? y : y + i;
-                    field->setCell(shipX, shipY, CL_SHIP);
-                }
-                placed = true;
-            }
-        }
-    }
+int GameController::getPlayerShipCellsCount() {
+    return getShipCellsCount(player);
 }
-*/
+
+int GameController::getBotShipCellsCount() {
+    return getShipCellsCount(bot);
+}
+
+bool isEmptyCell(Player* somePlayer, QPoint point) {
+    Field* field = somePlayer->getField();
+
+    return field->getCellState(point) == Cell::EMPTY;
+}
+
+bool GameController::isPlayerEmptyCell(QPoint point) {
+    return isEmptyCell(player, point);
+}
+
+bool GameController::isBotEmptyCell(QPoint point) {
+    return isEmptyCell(bot, point);
+}
+
+void setCellState(Player* somePlayer, QPoint point, int stateNum) {
+    Field* field = somePlayer->getField();
+
+    field->setCellState(point, static_cast<Cell>(stateNum));
+}
+
+void GameController::setBotCellState(QPoint point, int stateNum) {
+    setCellState(bot, point, stateNum);
+}
+
+void GameController::setPlayerCellState(QPoint point, int stateNum) {
+    setCellState(player, point, stateNum);
+}
+
+Cell getCellState(QPoint point, Player* somePlayer) {
+    Field* field = somePlayer->getField();
+
+    return field->getCellState(point);
+}
+
+Cell GameController::getBotCellState(QPoint point) {
+    return getCellState(point, bot);
+}
+
+Cell GameController::getPlayerCellState(QPoint point) {
+    return getCellState(point, player);
+}
+
+void printAllCellStates(Player* somePlayer) {
+    somePlayer->getField()->printFieldStates();
+}
+
+void GameController::printPlayerAllCellStates() {
+    printAllCellStates(player);
+}
+
+void GameController::printBotAllCellStates() {
+    printAllCellStates(bot);
+}
+
+QVector<Cell> getAllCells(Player* somePlayer) {
+    return somePlayer->getField()->getCells();
+}
+
+QVector<Cell> GameController::getPlayerAllCells() {
+    return getAllCells(player);
+}
+
+QVector<Cell> GameController::getBotAllCells() {
+    return getAllCells(bot);
+}

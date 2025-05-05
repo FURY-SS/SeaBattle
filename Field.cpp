@@ -22,7 +22,7 @@ Cell Field::getCellState(QPoint point) {
     return cells[point.x() + 10 * point.y()];
 }
 
-void Field::printBoardStates() {
+void Field::printFieldStates() {
     // Вывод игрового поля в виде матрицы
     for (int i = 0; i < 10; i++) {
         QString str = "";

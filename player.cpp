@@ -1,29 +1,26 @@
 #include "Player.h"
-/*
-Player::Player(Field* field) : field(field), shotStrategy(nullptr) {}
+#include "ship.h"
+
+Player::Player() {
+    field = new Field();
+}
 
 Player::~Player() {}
 
 void Player::createFleet() {
 
-    for (Ship* ship : ships) {
-        delete ship;
+    field->addShip(createShip(4));
+
+    for (int i {0}; i < 3; i++) {
+        field->addShip(createShip(3));
     }
 
-    ships.clear();
-
-    ships.append(createShip(4));
-
-    for (int i = 0; i < 2; i++) {
-        ships.append(createShip(3));
+    for (int i {0}; i < 2; i++) {
+        field->addShip(createShip(2));
     }
 
-    for (int i = 0; i < 3; i++) {
-        ships.append(createShip(2));
-    }
-
-    for (int i = 0; i < 4; i++) {
-        ships.append(createShip(1));
+    for (int i {0}; i < 1; i++) {
+        field->addShip(createShip(1));
     }
 }
 
@@ -31,16 +28,8 @@ Field* Player::getField() {
     return field;
 }
 
-bool Player::performShot(QPoint point) {
-    if (shotStrategy) {
-        QPoint shotPoint = shotStrategy->makeShot(point);
-        return field->getCell(shotPoint.x(), shotPoint.y()) == CL_CLEAR;
-    }
-    return false;
-}
-
-HumanPlayer::HumanPlayer(Field* field) : Player(field) {
-    shotStrategy = new ManualShotStrategy(field);
+QPoint Player::performShot(QPoint point) {
+    return strategy->shot(point);
 }
 
 Ship* HumanPlayer::createShip(int w) {
@@ -54,12 +43,9 @@ Ship* HumanPlayer::createShip(int w) {
     case 4:
         return new FourPartShip();
     default:
+        qDebug() << "Введен некорректный вес корабля";
         return nullptr;
     }
-}
-
-AIPlayer::AIPlayer(Field* field) : Player(field) {
-    shotStrategy = new RandomShotStrategy(field);
 }
 
 Ship* AIPlayer::createShip(int w) {
@@ -73,7 +59,8 @@ Ship* AIPlayer::createShip(int w) {
     case 4:
         return new FourPartShip();
     default:
+        qDebug() << "Введен некорректный вес корабля";
         return nullptr;
     }
 }
-*/
+
