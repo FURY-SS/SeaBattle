@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
-    setFixedSize(555, 309);
+    setFixedSize(830, 495);
 
     gameController = new GameController();
 
@@ -12,10 +12,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     this->setPalette(pal);
 
     gameController->infoLabel = new QLabel(this);
-    gameController->infoLabel->move(200, 260);
+    gameController->infoLabel->move(330, 420);
     gameController->infoLabel->setText("Расставьте корабли!");
-    gameController->infoLabel->setFixedSize(170, 40);
-    gameController->infoLabel->setStyleSheet("font-weight: bold; border-style: outset; border-width: 2px; border-radius: 10px;");
+    gameController->infoLabel->setFixedSize(170, 31);
+    gameController->infoLabel->setStyleSheet("font-weight: bold; border-style: outset; border-width: 3px; border-radius: 14px;");
     gameController->infoLabel->setAlignment(Qt::AlignCenter);
 }
 
@@ -25,12 +25,12 @@ MainWindow::~MainWindow() {
 
 QPoint MainWindow::getCoords(int x, int y, int fieldX, int fieldY) {
     QPoint res(-1, -1);
-    if (x < fieldX || x > (fieldX + 216) || y < fieldY || y > (fieldY + 217)) {
+    if (x < fieldX || x > (fieldX + 308) || y < fieldY || y > (fieldY + 308)) {
         return res;
     }
 
-    double cfx = 1.0 * 216 / 10.0;
-    double cfy = 1.0 * 217 / 10.0;
+    double cfx = 1.0 * 308 / 10.0;
+    double cfy = 1.0 * 308 / 10.0;
     res.setX(1.0 * (x - fieldX) / cfx);
     res.setY(1.0 * (y - fieldY) / cfy);
 
