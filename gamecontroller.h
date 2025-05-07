@@ -1,10 +1,9 @@
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 
-#include "Field.h"
-#include "ship.h"
 #include "player.h"
 #include <QLabel>
+#include <unistd.h>
 
 enum GameState {
     SHIPS_PLACING,
@@ -45,6 +44,18 @@ public:
     QVector<Cell> getBotAllCells();
 
     QLabel *infoLabel;
+
+    bool checkShipPlacement(Player* somePlayer);
+    bool checkPlayerShipPlacement();
+    bool checkBotShipPlacement();
+
+    void takeShot(Player* whoShots, Player* whoseField, QPoint point);
+    void playerShot(QPoint point);
+
+    void swapGameState();
+    int checkForGameOver();
+    void setGameState(GameState newState);
+    void botShot();
 };
 
 #endif // GAMECONTROLLER_H

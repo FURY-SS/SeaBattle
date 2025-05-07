@@ -5,6 +5,8 @@
 #include "gamecontroller.h"
 #include <QImage>
 #include <QMouseEvent>
+#include <QApplication>
+
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -19,8 +21,8 @@ private:
     GameController *gameController;
 
 protected:
-    //void mousePressEvent(QMouseEvent *event) override;
-    //void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
     //void keyPressEvent(QKeyEvent *event) override;
 };
 
