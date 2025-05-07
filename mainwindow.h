@@ -3,10 +3,8 @@
 
 #include <QMainWindow>
 #include "gamecontroller.h"
-
-QT_BEGIN_NAMESPACE
-namespace Ui {class MainWindow;}
-QT_END_NAMESPACE
+#include <QImage>
+#include <QMouseEvent>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -14,13 +12,16 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QPoint getCoordsPlayer(int x, int y);
+    QPoint getCoords(int x, int y, int fieldX, int fieldY);
 
 private:
-    Ui::MainWindow *ui;
-    GameController *controller;
+    GameController *gameController;
 
-    void setupUI();
-    void drawFields();
+protected:
+    //void mousePressEvent(QMouseEvent *event) override;
+    //void paintEvent(QPaintEvent *event) override;
+    //void keyPressEvent(QKeyEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

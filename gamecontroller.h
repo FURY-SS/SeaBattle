@@ -4,6 +4,7 @@
 #include "Field.h"
 #include "ship.h"
 #include "player.h"
+#include <QLabel>
 
 enum GameState {
     SHIPS_PLACING,
@@ -42,6 +43,8 @@ public:
 
     QVector<Cell> getPlayerAllCells();
     QVector<Cell> getBotAllCells();
+
+    QLabel *infoLabel;
 };
 
 #endif // GAMECONTROLLER_H
