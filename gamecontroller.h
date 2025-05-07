@@ -23,7 +23,7 @@ public:
 
     GameState getGameState();
 
-    void createFlots(); // создает все корабли для обоих игроков
+    void createFlots();
 
     int getPlayerShipCellsCount();
     int getBotShipCellsCount();
