@@ -5,6 +5,7 @@
 #include <QPoint>
 #include "Field.h"
 #include "shotsstrategy.h"
+#include "ship.h"
 
 class Player {
 protected:

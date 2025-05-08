@@ -18,8 +18,10 @@ public:
     void setCoords(QPoint point);
     int getHealth();
     QPoint getCoords();
-
     void shipDamage();
+
+    void setDirection(bool dir);
+    bool getDirection();
 };
 
 class OnePartShip : public Ship {

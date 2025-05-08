@@ -19,3 +19,11 @@ QPoint Ship::getCoords() {
 void Ship::shipDamage() {
     shipHealth--;
 }
+
+void Ship::setDirection(bool dir) {
+    direction = dir;
+}
+
+bool Ship::getDirection() {
+    return direction;
+}

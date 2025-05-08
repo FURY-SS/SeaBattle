@@ -324,7 +324,7 @@ void GameController::swapGameState() {
 void GameController::botShot() {
     takeShot(bot, player, QPoint(-1, -1));
 
-    sleep(1);
+    sleep(0.5);
 }
 
 void syncShipsCells(Player* somePlayer) {
@@ -441,8 +441,72 @@ void GameController::syncBotShipsCells() {
     return syncShipsCells(bot);
 }
 
+bool canPlaceShip(Field* field, Ship* ship) {
+    QPoint coords = ship->getCoords();
+    int w = ship->getWeight();
+    bool dir = ship->getDirection();
+
+    for (int i = 0; i < w; ++i) {
+        QPoint p = dir ? QPoint(coords.x() + i, coords.y()): QPoint(coords.x(), coords.y() + i);
+
+        if (p.x() > 9 || p.y() > 9 || field->getCellState(p) != Cell::EMPTY) {
+            return false;
+        }
+
+        // Проверка окружения
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                QPoint adj(p.x() + dx, p.y() + dy);
+                if (field->getCellState(adj) == Cell::SHIP)
+                    return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void placeShip(Field* field, Ship* ship) {
+    QPoint coords = ship->getCoords();
+    int w = ship->getWeight();
+    bool dir = ship->getDirection();
+
+    for (int i = 0; i < w; ++i) {
+        QPoint p = dir ? QPoint(coords.x() + i, coords.y()): QPoint(coords.x(), coords.y() + i);
+        field->setCellState(p, Cell::SHIP);
+    }
+}
+
 void GameController::botRandomShipsPlacing() {
-    // Простая расстановка без проверок на пересечения
-    bot->createFleet();
-    syncBotShipsCells();
+    Field* field = bot->getField();
+    field->clear();
+    QVector<Ship*> flot;
+
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+    // Добавим корабли по весу (4 -> 1)
+    const QVector<int> weights = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
+    for (int w : weights) {
+        bool placed = false;
+
+        while (!placed) {
+            Ship* ship = bot->createShip(w);
+            QPoint coord(rand() % 10, rand() % 10);
+            bool direction = rand() % 2; // true — горизонтально, false — вертикально
+            ship->setCoords(coord);
+            ship->setDirection(direction);
+
+            if (canPlaceShip(field, ship)) {
+                flot.append(ship);
+                placeShip(field, ship);
+                placed = true;
+            } else {
+                delete ship;
+            }
+        }
+    }
+
+    // Заменим текущий флот
+    for (Ship* s : flot)
+        field->addShip(s);
 }

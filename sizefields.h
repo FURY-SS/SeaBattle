@@ -14,8 +14,8 @@ const int MYFIELD_HALF_Y = 7 * CELL_SIZE_Y + 6;
 const int ENEMYFIELD_X = 15 * CELL_SIZE_X + 4;
 const int ENEMYFIELD_Y = 2 * CELL_SIZE_Y + 6;
 
-const int ENEMYFIELD_HALF_X = 25 * CELL_SIZE_X + 4;
-const int ENEMYFIELD_HALF_Y = 12 * CELL_SIZE_Y + 6;
+const int ENEMYFIELD_HALF_X = 20 * CELL_SIZE_X + 4;
+const int ENEMYFIELD_HALF_Y = 7 * CELL_SIZE_Y + 6;
 
 const int FIELD_WIDTH = 306;
 const int FIELD_HEIGHT = 316;
