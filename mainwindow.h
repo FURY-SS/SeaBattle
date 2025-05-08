@@ -6,6 +6,7 @@
 #include <QImage>
 #include <QMouseEvent>
 #include <QApplication>
+#include "sizefields.h"
 
 
 class MainWindow : public QMainWindow {

@@ -25,12 +25,12 @@ MainWindow::~MainWindow() {
 
 QPoint MainWindow::getCoords(int x, int y, int fieldX, int fieldY) {
     QPoint res(-1, -1);
-    if (x < fieldX || x > (fieldX + 308) || y < fieldY || y > (fieldY + 308)) {
+    if (x < fieldX || x > (fieldX + FIELD_WIDTH) || y < fieldY || y > (fieldY + FIELD_HEIGHT)) {
         return res;
     }
 
-    double cfx = 1.0 * 308 / 10.0;
-    double cfy = 1.0 * 308 / 10.0;
+    double cfx = 1.0 * FIELD_WIDTH / 10.0;
+    double cfy = 1.0 * FIELD_HEIGHT / 10.0;
     res.setX(1.0 * (x - fieldX) / cfx);
     res.setY(1.0 * (y - fieldY) / cfy);
 
@@ -56,10 +56,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         if (gameController->getGameState() == GameState::SHIPS_PLACING) {
             QPointF pos = event->position();
 
-            if (pos.x() >= 62 && pos.x() <= 308 + 62
-                && pos.y() >= 62 && pos.y() <= 308 + 62) {
+            if (pos.x() >= MYFIELD_X && pos.x() <= FIELD_WIDTH + MYFIELD_X
+                && pos.y() >= MYFIELD_Y && pos.y() <= FIELD_HEIGHT + MYFIELD_Y) {
 
-                QPoint qp = getCoords(pos.x(), pos.y(), 62, 62);
+                QPoint qp = getCoords(pos.x(), pos.y(), MYFIELD_X, MYFIELD_Y);
 
                 if (qp.x() == 10)
                     qp.setX(9);
@@ -86,9 +86,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         } else if (gameController->getGameState() == GameState::PLAYER_TURN) {
             QPointF pos = event->position();
 
-            if (pos.x() >= 462 && pos.x() <= 308 + 462
-                && pos.y() >= 62 && pos.y() <= 308 + 62) {
-                QPoint qp = getCoords(pos.x(), pos.y(), 462, 62);
+            if (pos.x() >= ENEMYFIELD_X && pos.x() <= FIELD_WIDTH + ENEMYFIELD_X && pos.y() >= ENEMYFIELD_Y && pos.y() <= FIELD_HEIGHT + ENEMYFIELD_Y) {
+                QPoint qp = getCoords(pos.x(), pos.y(), ENEMYFIELD_X, ENEMYFIELD_Y);
 
                 if (qp.x() == 10)
                     qp.setX(9);
@@ -150,14 +149,14 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             int y = i / 10;
 
             if (x < 5 && y < 5) {
-                drawPoint.setX(62 + (x * 31));
-                drawPoint.setY(62 + (y * 31));
+                drawPoint.setX(MYFIELD_X + (x * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_Y + (y * CELL_SIZE_Y));
             } else {
-                drawPoint.setX(216 + ((x - 5) * 31));
-                drawPoint.setY(216 + ((y - 5) * 31));
+                drawPoint.setX(MYFIELD_HALF_X + ((x - 5) * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
-            painter.drawPixmap(drawPoint, QPixmap(":/full.png"));
+            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
         } else if (currentCellsState[i] == Cell::DAMAGED) {
             QPoint drawPoint;
 
@@ -165,11 +164,11 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             int y = i / 10;
 
             if (x < 5 && y < 5) {
-                drawPoint.setX(62 + (x * 31));
-                drawPoint.setY(62 + (y * 31));
+                drawPoint.setX(MYFIELD_X + (x * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_Y + (y * CELL_SIZE_Y));
             } else {
-                drawPoint.setX(216 + ((x - 5) * 31));
-                drawPoint.setY(216 + ((y - 5) * 31));
+                drawPoint.setX(MYFIELD_HALF_X + ((x - 5) * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
             painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
@@ -180,14 +179,14 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             int y = i / 10;
 
             if (x < 5 && y < 5) {
-                drawPoint.setX(62 + (x * 31));
-                drawPoint.setY(62 + (y * 31));
+                drawPoint.setX(MYFIELD_X + (x * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_Y + (y * CELL_SIZE_Y));
             } else {
-                drawPoint.setX(216 + ((x - 5) * 31));
-                drawPoint.setY(216 + ((y - 5) * 31));
+                drawPoint.setX(MYFIELD_HALF_X + ((x - 5) * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
-            painter.drawPixmap(drawPoint, QPixmap(":/full.png"));
+            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
         } else if (currentCellsState[i] == Cell::DOT) {
             QPoint drawPoint;
 
@@ -195,14 +194,14 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             int y = i / 10;
 
             if (x < 5 && y < 5) {
-                drawPoint.setX(62 + (x * 31));
-                drawPoint.setY(62 + (y * 31));
+                drawPoint.setX(MYFIELD_X + (x * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_Y + (y * CELL_SIZE_Y));
             } else {
-                drawPoint.setX(216 + ((x - 5) * 31));
-                drawPoint.setY(216 + ((y - 5) * 31));
+                drawPoint.setX(MYFIELD_HALF_X + ((x - 5) * CELL_SIZE_X));
+                drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
-            painter.drawPixmap(drawPoint, QPixmap(":/dot.png"));
+            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
         }
     }
 

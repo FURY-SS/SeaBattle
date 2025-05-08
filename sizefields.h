@@ -1,0 +1,23 @@
+#ifndef SIZEFIELDS_H
+#define SIZEFIELDS_H
+
+const float CELL_SIZE_X = 30.6;
+const float CELL_SIZE_Y = 31.6;
+
+const int MYFIELD_X = 2 * CELL_SIZE_X + 5;
+const int MYFIELD_Y = 2 * CELL_SIZE_Y + 7;
+
+const int MYFIELD_HALF_X = 7 * CELL_SIZE_X + 5;
+const int MYFIELD_HALF_Y = 7 * CELL_SIZE_Y + 7;
+
+
+const int ENEMYFIELD_X = 15 * CELL_SIZE_X + 5;
+const int ENEMYFIELD_Y = 2 * CELL_SIZE_Y + 7;
+
+const int ENEMYFIELD_HALF_X = 25 * CELL_SIZE_X + 5;
+const int ENEMYFIELD_HALF_Y = 12 * CELL_SIZE_Y + 7;
+
+const int FIELD_WIDTH = 306;
+const int FIELD_HEIGHT = 316;
+
+#endif

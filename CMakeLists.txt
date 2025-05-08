@@ -30,6 +30,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         player.h player.cpp
         ship.h ship.cpp
         shotsstrategy.h shotsstrategy.cpp
+        sizefields.h
 
     )
 # Define target properties for Android with Qt 6 as:
