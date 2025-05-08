@@ -44,8 +44,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 
         qDebug() << "Mouse click at (" << pos.x() << "," << pos.y() << ")";
 
-        qDebug() << "\nПоле бота:";
-        gameController->printBotAllCellStates();
+        //qDebug() << "\nПоле бота:";
+        //gameController->printBotAllCellStates();
 
     }
 
@@ -56,8 +56,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         if (gameController->getGameState() == GameState::SHIPS_PLACING) {
             QPointF pos = event->position();
 
-            if (pos.x() >= MYFIELD_X && pos.x() <= FIELD_WIDTH + MYFIELD_X
-                && pos.y() >= MYFIELD_Y && pos.y() <= FIELD_HEIGHT + MYFIELD_Y) {
+            if (pos.x() >= MYFIELD_X && pos.x() <= FIELD_WIDTH + MYFIELD_X && pos.y() >= MYFIELD_Y && pos.y() <= FIELD_HEIGHT + MYFIELD_Y) {
 
                 QPoint qp = getCoords(pos.x(), pos.y(), MYFIELD_X, MYFIELD_Y);
 

@@ -11,15 +11,15 @@ void Player::createFleet() {
 
     field->addShip(createShip(4));
 
-    for (int i {0}; i < 3; i++) {
+    for (int i {0}; i < 2; i++) {
         field->addShip(createShip(3));
     }
 
-    for (int i {0}; i < 2; i++) {
+    for (int i {0}; i < 3; i++) {
         field->addShip(createShip(2));
     }
 
-    for (int i {0}; i < 1; i++) {
+    for (int i {0}; i < 4; i++) {
         field->addShip(createShip(1));
     }
 }

@@ -206,78 +206,6 @@ bool GameController::checkBotShipPlacement() {
     return checkShipPlacement(bot);
 }
 
-void GameController::takeShot(Player* whoShots, Player* whoseField, QPoint point) {
-    Field* field = whoseField->getField();
-    QPoint shotedPoint = whoShots->performShot(point);
-
-
-    if (field->getCellState(shotedPoint) == Cell::EMPTY) {
-        field->setCellState(shotedPoint, Cell::DOT);
-        // TODO: переход к ходу бота
-        swapGameState();
-        if (getGameState() == GameState::ENEMY_TURN)
-            infoLabel->setText("Ход Бота!");
-        else {
-            infoLabel->setText("Ваш ход!");
-        }
-
-    } else if (field->getCellState(shotedPoint) == Cell::SHIP) {
-        // обработка попадания по кораблю
-        // если корабль подбили - поставить Cell::DAMAGED, если убили - DEAD
-
-        Ship* shotedShip = field->getShipByCell(shotedPoint);
-        shotedShip->shipDamage();
-
-        int shipHealth = shotedShip->getHealth();
-
-        field->setCellState(shotedPoint, Cell::DAMAGED);
-
-        if (shipHealth != 0) {
-            // не добили
-            int d = 0;
-        } else {
-            // убили
-            // установка всех клеток, пренадлежащих кораблю в статус DEAD
-            if (field->getCellState(QPoint(shotedShip->getCoords().x() + 1, shotedShip->getCoords().y())) == Cell::DAMAGED || shotedShip->getWeight() == 1) {
-                // ориентация горизонтальная
-                for (int i {0}; i < shotedShip->getWeight(); i++) {
-                    field->setCellState(QPoint(shotedShip->getCoords().x() + i, shotedShip->getCoords().y()), Cell::DEAD);
-                }
-
-                // расстановка точек вокруг мертвого корабля по горизонтали
-                for (int i {-1}; i < shotedShip->getWeight() + 1; i++) {
-                    field->setCellState(QPoint(shotedShip->getCoords().x() + i, shotedShip->getCoords().y() + 1), Cell::DOT);
-                    field->setCellState(QPoint(shotedShip->getCoords().x() + i, shotedShip->getCoords().y() - 1), Cell::DOT);
-                }
-
-                field->setCellState(QPoint(shotedShip->getCoords().x() - 1, shotedShip->getCoords().y()), Cell::DOT);
-                field->setCellState(QPoint(shotedShip->getCoords().x() + shotedShip->getWeight(), shotedShip->getCoords().y()), Cell::DOT);
-
-            } else {
-                for (int i {0}; i < shotedShip->getWeight(); i++) {
-                    field->setCellState(QPoint(shotedShip->getCoords().x(), shotedShip->getCoords().y() + i), Cell::DEAD);
-                }
-
-                // расстановка точек вокруг мертвого корабля по вертикали
-                for (int i {-1}; i < shotedShip->getWeight() + 1; i++) {
-                    field->setCellState(QPoint(shotedShip->getCoords().x() + 1, shotedShip->getCoords().y() + i), Cell::DOT);
-                    field->setCellState(QPoint(shotedShip->getCoords().x() - 1, shotedShip->getCoords().y() + i), Cell::DOT);
-                }
-
-                field->setCellState(QPoint(shotedShip->getCoords().x(), shotedShip->getCoords().y() - 1), Cell::DOT);
-                field->setCellState(QPoint(shotedShip->getCoords().x(), shotedShip->getCoords().y() + shotedShip->getWeight()), Cell::DOT);
-            }
-
-            qDebug() << "Убили" << shotedShip->getWeight() << "палубник";
-
-        }
-    }
-}
-
-void GameController::playerShot(QPoint point) {
-    takeShot(player, bot, point);
-}
-
 int GameController::checkForGameOver() {
     Field* playerBoard = player->getField();
     Field* botBoard = bot->getField();
@@ -303,8 +231,8 @@ int GameController::checkForGameOver() {
         return 2; // победа игрока
     }
 
-    // qDebug() << "Суммарное здоровье игрока:" << playerSummuryHelth;
-    // qDebug() << "Суммарное здоровье бота:" << botSummuryHelth;
+    qDebug() << "Суммарное здоровье игрока:" << playerSummuryHelth;
+    qDebug() << "Суммарное здоровье бота:" << botSummuryHelth;
 
     return 0;
 }
@@ -314,17 +242,11 @@ void GameController::setGameState(GameState newState) {
 }
 
 void GameController::swapGameState() {
-    if (getGameState() == GameState::ENEMY_TURN)
+    if (getGameState() == GameState::ENEMY_TURN) {
         setGameState(GameState::PLAYER_TURN);
-    else if (getGameState() == GameState::PLAYER_TURN){
+    } else if (getGameState() == GameState::PLAYER_TURN){
         setGameState(GameState::ENEMY_TURN);
     }
-}
-
-void GameController::botShot() {
-    takeShot(bot, player, QPoint(-1, -1));
-
-    sleep(0.5);
 }
 
 void syncShipsCells(Player* somePlayer) {
@@ -509,4 +431,82 @@ void GameController::botRandomShipsPlacing() {
     // Заменим текущий флот
     for (Ship* s : flot)
         field->addShip(s);
+}
+
+void GameController::takeShot(Player* whoShots, Player* whoseField, QPoint point) {
+    Field* field = whoseField->getField();
+    QPoint shotedPoint = whoShots->performShot(point);
+
+
+    if (field->getCellState(shotedPoint) == Cell::EMPTY) {
+        field->setCellState(shotedPoint, Cell::DOT);
+        // TODO: переход к ходу бота
+        swapGameState();
+        if (getGameState() == GameState::ENEMY_TURN)
+            infoLabel->setText("Ход Бота!");
+        else {
+            infoLabel->setText("Ваш ход!");
+        }
+
+    } else if (field->getCellState(shotedPoint) == Cell::SHIP) {
+        // обработка попадания по кораблю
+        // если корабль подбили - поставить Cell::DAMAGED, если убили - DEAD
+
+        Ship* shotedShip = field->getShipByCell(shotedPoint);
+        shotedShip->shipDamage();
+
+        int shipHealth = shotedShip->getHealth();
+
+        field->setCellState(shotedPoint, Cell::DAMAGED);
+
+        if (shipHealth != 0) {
+            // не добили
+            int d = 0;
+        } else {
+            // убили
+            // установка всех клеток, пренадлежащих кораблю в статус DEAD
+            if (field->getCellState(QPoint(shotedShip->getCoords().x() + 1, shotedShip->getCoords().y())) == Cell::DAMAGED || shotedShip->getWeight() == 1) {
+                // ориентация горизонтальная
+                for (int i {0}; i < shotedShip->getWeight(); i++) {
+                    field->setCellState(QPoint(shotedShip->getCoords().x() + i, shotedShip->getCoords().y()), Cell::DEAD);
+                }
+
+                // расстановка точек вокруг мертвого корабля по горизонтали
+                for (int i {-1}; i < shotedShip->getWeight() + 1; i++) {
+                    field->setCellState(QPoint(shotedShip->getCoords().x() + i, shotedShip->getCoords().y() + 1), Cell::DOT);
+                    field->setCellState(QPoint(shotedShip->getCoords().x() + i, shotedShip->getCoords().y() - 1), Cell::DOT);
+                }
+
+                field->setCellState(QPoint(shotedShip->getCoords().x() - 1, shotedShip->getCoords().y()), Cell::DOT);
+                field->setCellState(QPoint(shotedShip->getCoords().x() + shotedShip->getWeight(), shotedShip->getCoords().y()), Cell::DOT);
+
+            } else {
+                for (int i {0}; i < shotedShip->getWeight(); i++) {
+                    field->setCellState(QPoint(shotedShip->getCoords().x(), shotedShip->getCoords().y() + i), Cell::DEAD);
+                }
+
+                // расстановка точек вокруг мертвого корабля по вертикали
+                for (int i {-1}; i < shotedShip->getWeight() + 1; i++) {
+                    field->setCellState(QPoint(shotedShip->getCoords().x() + 1, shotedShip->getCoords().y() + i), Cell::DOT);
+                    field->setCellState(QPoint(shotedShip->getCoords().x() - 1, shotedShip->getCoords().y() + i), Cell::DOT);
+                }
+
+                field->setCellState(QPoint(shotedShip->getCoords().x(), shotedShip->getCoords().y() - 1), Cell::DOT);
+                field->setCellState(QPoint(shotedShip->getCoords().x(), shotedShip->getCoords().y() + shotedShip->getWeight()), Cell::DOT);
+            }
+
+            qDebug() << "Убили" << shotedShip->getWeight() << "палубник";
+
+        }
+    }
+}
+
+void GameController::playerShot(QPoint point) {
+    takeShot(player, bot, point);
+}
+
+void GameController::botShot() {
+    takeShot(bot, player, QPoint(-1, -1));
+
+    sleep(1);
 }
