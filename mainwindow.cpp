@@ -156,7 +156,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                 drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
-            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
+            painter.drawPixmap(drawPoint, QPixmap(":/full.png"));
         } else if (currentCellsState[i] == Cell::DAMAGED) {
             QPoint drawPoint;
 
@@ -171,7 +171,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                 drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
-            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
+            painter.drawPixmap(drawPoint, QPixmap(":/half_r.png"));
         } else if (currentCellsState[i] == Cell::DEAD) {
             QPoint drawPoint;
 
@@ -186,7 +186,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                 drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
-            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
+            painter.drawPixmap(drawPoint, QPixmap(":/full_r.png"));
         } else if (currentCellsState[i] == Cell::DOT) {
             QPoint drawPoint;
 
@@ -201,9 +201,80 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                 drawPoint.setY(MYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
             }
 
-            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
+            painter.drawPixmap(drawPoint, QPixmap(":/dot.png"));
         }
     }
 
-    //Отрисовка поля бота, дописать...
+    QVector<Cell> currentCellsStateBot = gameController->getBotAllCells();
+
+    // отрисовка поля бота
+    for (int i {0}; i < currentCellsStateBot.size(); i++) {
+        if (currentCellsStateBot[i] == Cell::DOT) {
+            QPoint drawPoint;
+
+            int x = i % 10;
+            int y = i / 10;
+
+            if (x < 5 && y < 5) {
+                drawPoint.setX(ENEMYFIELD_X + (x * CELL_SIZE_X));
+                drawPoint.setY(ENEMYFIELD_Y + (y * CELL_SIZE_Y));
+            } else {
+                drawPoint.setX(ENEMYFIELD_HALF_X + ((x - 5) * CELL_SIZE_X));
+                drawPoint.setY(ENEMYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
+            }
+
+            painter.drawPixmap(drawPoint, QPixmap(":/dot.png"));
+        } else if (currentCellsStateBot[i] == Cell::DAMAGED) {
+            QPoint drawPoint;
+
+            int x = i % 10;
+            int y = i / 10;
+
+            if (x < 5 && y < 5) {
+                drawPoint.setX(ENEMYFIELD_X + (x * CELL_SIZE_X));
+                drawPoint.setY(ENEMYFIELD_Y + (y * CELL_SIZE_Y));
+            } else {
+                drawPoint.setX(ENEMYFIELD_HALF_X + ((x - 5) * CELL_SIZE_X));
+                drawPoint.setY(ENEMYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
+            }
+
+            painter.drawPixmap(drawPoint, QPixmap(":/half.png"));
+        } else if (currentCellsStateBot[i] == Cell::DEAD) {
+            QPoint drawPoint;
+
+            int x = i % 10;
+            int y = i / 10;
+
+            if (x < 5 && y < 5) {
+                drawPoint.setX(ENEMYFIELD_X + (x * CELL_SIZE_X));
+                drawPoint.setY(ENEMYFIELD_Y + (y * CELL_SIZE_Y));
+            } else {
+                drawPoint.setX(ENEMYFIELD_HALF_X + ((x - 5) * CELL_SIZE_X));
+                drawPoint.setY(ENEMYFIELD_HALF_Y + ((y - 5) * CELL_SIZE_Y));
+            }
+
+            painter.drawPixmap(drawPoint, QPixmap(":/full.png"));
+        }
+    }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if (gameController->getGameState() == GameState::SHIPS_PLACING) {
+        if (event->key() == Qt::Key_Space) {
+            if (gameController->checkPlayerShipPlacement()) {
+
+                // синхронизация кораблей и клеток
+                gameController->syncPlayerShipsCells();
+
+                // расстановка кораблей ботом
+                gameController->botRandomShipsPlacing();
+
+                // смена состояния на ХОД ИГРОКА
+                gameController->setGameState(GameState::PLAYER_TURN);
+
+                // смена надписи
+                gameController->infoLabel->setText("Твой Ход!");
+            }
+        }
+    }
 }

@@ -45,7 +45,6 @@ public:
 
     QLabel *infoLabel;
 
-    bool checkShipPlacement(Player* somePlayer);
     bool checkPlayerShipPlacement();
     bool checkBotShipPlacement();
 
@@ -56,6 +55,9 @@ public:
     int checkForGameOver();
     void setGameState(GameState newState);
     void botShot();
+    void botRandomShipsPlacing();
+    void syncPlayerShipsCells();
+    void syncBotShipsCells();
 };
 
 #endif // GAMECONTROLLER_H

@@ -181,7 +181,7 @@ int shipNum(Player* somePlayer, int size) {
     return shipNumber;
 }
 
-bool GameController::checkShipPlacement(Player *somePlayer) {
+bool checkShipPlacement(Player *somePlayer) {
     // проверка на кол-во кораблей, должно быть 20
     if (getShipCellsCount(somePlayer) == 20) {
         if (shipNum(somePlayer, 1) == 4 &&
@@ -325,4 +325,124 @@ void GameController::botShot() {
     takeShot(bot, player, QPoint(-1, -1));
 
     sleep(1);
+}
+
+void syncShipsCells(Player* somePlayer) {
+    Field* field = somePlayer->getField();
+
+    QPoint fourPartShip;
+    for (int i = 0; i < 10; i++)
+        for (int j = 0; j < 10; j++)
+            if (isShip(somePlayer, 4, j, i)) {
+                fourPartShip.setX(j);
+                fourPartShip.setY(i);
+            }
+
+    QPoint threePartShip1(-1, -1);
+    QPoint threePartShip2(-1, -1);
+    for (int i = 0; i < 10; i++)
+        for (int j = 0; j < 10; j++)
+            if (isShip(somePlayer, 3, j, i)) {
+                if (threePartShip1.x() == -1) {
+                    threePartShip1.setX(j);
+                    threePartShip1.setY(i);
+                } else {
+                    threePartShip2.setX(j);
+                    threePartShip2.setY(i);
+                }
+            }
+
+    QPoint twoPartShip1(-1, -1);
+    QPoint twoPartShip2(-1, -1);
+    QPoint twoPartShip3(-1, -1);
+
+    for (int i = 0; i < 10; i++)
+        for (int j = 0; j < 10; j++)
+            if (isShip(somePlayer, 2, j, i)) {
+                if (twoPartShip1.x() == -1) {
+                    twoPartShip1.setX(j);
+                    twoPartShip1.setY(i);
+                } else if (twoPartShip2.x() == -1) {
+                    twoPartShip2.setX(j);
+                    twoPartShip2.setY(i);
+                } else {
+                    twoPartShip3.setX(j);
+                    twoPartShip3.setY(i);
+                }
+            }
+
+    QPoint onePartShip1(-1, -1);
+    QPoint onePartShip2(-1, -1);
+    QPoint onePartShip3(-1, -1);
+    QPoint onePartShip4(-1, -1);
+
+    for (int i = 0; i < 10; i++)
+        for (int j = 0; j < 10; j++)
+            if (isShip(somePlayer, 1, j, i)) {
+                if (onePartShip1.x() == -1) {
+                    onePartShip1.setX(j);
+                    onePartShip1.setY(i);
+                } else if (onePartShip2.x() == -1) {
+                    onePartShip2.setX(j);
+                    onePartShip2.setY(i);
+                } else if (onePartShip3.x() == -1){
+                    onePartShip3.setX(j);
+                    onePartShip3.setY(i);
+                } else {
+                    onePartShip4.setX(j);
+                    onePartShip4.setY(i);
+                }
+            }
+
+    for (Ship* ship : field->getFlot()) {
+        if (ship->getWeight() == 4) {
+            ship->setCoords(fourPartShip);
+        } else if (ship->getWeight() == 3) {
+            if (threePartShip1.x() != -1) {
+                ship->setCoords(threePartShip1);
+                threePartShip1.setX(-1);
+            } else {
+                ship->setCoords(threePartShip2);
+            }
+        } else if (ship->getWeight() == 2) {
+            if (twoPartShip1.x() != -1) {
+                ship->setCoords(twoPartShip1);
+                twoPartShip1.setX(-1);
+            } else if (twoPartShip2.x() != -1) {
+                ship->setCoords(twoPartShip2);
+                twoPartShip2.setX(-1);
+            } else {
+                ship->setCoords(twoPartShip3);
+            }
+        } else {
+            if (onePartShip1.x() != -1) {
+                ship->setCoords(onePartShip1);
+                onePartShip1.setX(-1);
+            } else if (onePartShip2.x() != -1) {
+                ship->setCoords(onePartShip2);
+                onePartShip2.setX(-1);
+            } else if (onePartShip3.x() != -1) {
+                ship->setCoords(onePartShip3);
+                onePartShip3.setX(-1);
+            } else {
+                ship->setCoords(onePartShip4);
+            }
+        }
+    }
+
+    field->prettyPrintFlot();
+}
+
+void GameController::syncPlayerShipsCells() {
+    return syncShipsCells(player);
+}
+
+void GameController::syncBotShipsCells() {
+    return syncShipsCells(bot);
+}
+
+void GameController::botRandomShipsPlacing() {
+    // Простая расстановка без проверок на пересечения
+    bot->createFleet();
+    syncBotShipsCells();
 }
