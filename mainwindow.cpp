@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QGraphicsDropShadowEffect>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     setFixedSize(830, 495);
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     gameController->infoLabel->move(330, 420);
     gameController->infoLabel->setText("Расставьте корабли!");
     gameController->infoLabel->setFixedSize(170, 31);
+
     gameController->infoLabel->setStyleSheet("font-weight: bold; border-style: outset; border-width: 3px; border-radius: 14px;");
     gameController->infoLabel->setAlignment(Qt::AlignCenter);
 }

@@ -402,35 +402,60 @@ void placeShip(Field* field, Ship* ship) {
 void GameController::botRandomShipsPlacing() {
     Field* field = bot->getField();
     field->clear();
-    QVector<Ship*> flot;
 
-    std::srand(static_cast<unsigned>(std::time(nullptr)));
+    srand(static_cast<unsigned>(time(nullptr)));
 
-    // Добавим корабли по весу (4 -> 1)
-    const QVector<int> weights = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
-    for (int w : weights) {
+    // Кол-во кораблей по весу
+    int sizes[10] = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
+
+    for (int k = 0; k < 10; k++) {
+        int size = sizes[k];
+
         bool placed = false;
-
         while (!placed) {
-            Ship* ship = bot->createShip(w);
-            QPoint coord(rand() % 10, rand() % 10);
-            bool direction = rand() % 2; // true — горизонтально, false — вертикально
-            ship->setCoords(coord);
-            ship->setDirection(direction);
+            int x = rand() % 10;
+            int y = rand() % 10;
+            bool horizontal = rand() % 2;
 
-            if (canPlaceShip(field, ship)) {
-                flot.append(ship);
-                placeShip(field, ship);
+            bool canPlace = true;
+
+            // Проверка, можно ли поставить корабль
+            for (int i = 0; i < size; i++) {
+                int dx = horizontal ? x + i : x;
+                int dy = horizontal ? y : y + i;
+
+                if (dx >= 10 || dy >= 10 || field->getCellState(QPoint(dx, dy)) != Cell::EMPTY) {
+                    canPlace = false;
+                    break;
+                }
+
+                // Проверка окружения
+                for (int nx = -1; nx <= 1; nx++) {
+                    for (int ny = -1; ny <= 1; ny++) {
+                        int cx = dx + nx;
+                        int cy = dy + ny;
+
+                        if (cx >= 0 && cx < 10 && cy >= 0 && cy < 10 &&
+                            field->getCellState(QPoint(cx, cy)) == Cell::SHIP) {
+                            canPlace = false;
+                        }
+                    }
+                }
+            }
+
+            // Установка корабля
+            if (canPlace) {
+                for (int i = 0; i < size; i++) {
+                    int dx = horizontal ? x + i : x;
+                    int dy = horizontal ? y : y + i;
+                    field->setCellState(QPoint(dx, dy), Cell::SHIP);
+                }
                 placed = true;
-            } else {
-                delete ship;
             }
         }
     }
 
-    // Заменим текущий флот
-    for (Ship* s : flot)
-        field->addShip(s);
+    syncBotShipsCells();
 }
 
 void GameController::takeShot(Player* whoShots, Player* whoseField, QPoint point) {
