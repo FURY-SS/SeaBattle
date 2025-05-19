@@ -4,6 +4,7 @@
 #include "player.h"
 #include <QLabel>
 #include <unistd.h>
+#include "shotsstrategy.h"
 
 enum GameState {
     SHIPS_PLACING,

@@ -7,7 +7,8 @@
 #include <QMouseEvent>
 #include <QApplication>
 #include "sizefields.h"
-
+#include <QDialog>
+#include <QPushButton>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -20,6 +21,10 @@ public:
 
 private:
     GameController *gameController;
+    QPushButton* rulesButton;
+
+private slots:
+    void showRulesDialog();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

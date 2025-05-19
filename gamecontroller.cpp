@@ -462,7 +462,6 @@ void GameController::takeShot(Player* whoShots, Player* whoseField, QPoint point
     Field* field = whoseField->getField();
     QPoint shotedPoint = whoShots->performShot(point);
 
-
     if (field->getCellState(shotedPoint) == Cell::EMPTY) {
         field->setCellState(shotedPoint, Cell::DOT);
         // TODO: переход к ходу бота

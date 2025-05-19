@@ -6,5 +6,6 @@
         <file>half_r.png</file>
         <file>dot.png</file>
         <file>full_r.png</file>
+        <file>rules.png</file>
     </qresource>
 </RCC>
