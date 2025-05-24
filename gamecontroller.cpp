@@ -249,105 +249,47 @@ void GameController::swapGameState() {
     }
 }
 
+// Возвращает список координат найденных кораблей с данным весом
+std::vector<QPoint> findShipsCoords(Player* player, int shipWeight) {
+    std::vector<QPoint> coordsList;
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            if (isShip(player, shipWeight, x, y)) {
+                coordsList.emplace_back(x, y);
+            }
+        }
+    }
+    return coordsList;
+}
+
 void syncShipsCells(Player* somePlayer) {
     Field* field = somePlayer->getField();
 
-    QPoint fourPartShip;
-    for (int i = 0; i < BOARD_SIZE; i++)
-        for (int j = 0; j < BOARD_SIZE; j++)
-            if (isShip(somePlayer, 4, j, i)) {
-                fourPartShip.setX(j);
-                fourPartShip.setY(i);
-            }
+    // Для каждого типа корабля получаем список координат
+    auto fourPartShips = findShipsCoords(somePlayer, 4);
+    auto threePartShips = findShipsCoords(somePlayer, 3);
+    auto twoPartShips = findShipsCoords(somePlayer, 2);
+    auto onePartShips = findShipsCoords(somePlayer, 1);
 
-    QPoint threePartShip1(-1, -1);
-    QPoint threePartShip2(-1, -1);
-    for (int i = 0; i < BOARD_SIZE; i++)
-        for (int j = 0; j < BOARD_SIZE; j++)
-            if (isShip(somePlayer, 3, j, i)) {
-                if (threePartShip1.x() == -1) {
-                    threePartShip1.setX(j);
-                    threePartShip1.setY(i);
-                } else {
-                    threePartShip2.setX(j);
-                    threePartShip2.setY(i);
-                }
-            }
-
-    QPoint twoPartShip1(-1, -1);
-    QPoint twoPartShip2(-1, -1);
-    QPoint twoPartShip3(-1, -1);
-
-    for (int i = 0; i < BOARD_SIZE; i++)
-        for (int j = 0; j < BOARD_SIZE; j++)
-            if (isShip(somePlayer, 2, j, i)) {
-                if (twoPartShip1.x() == -1) {
-                    twoPartShip1.setX(j);
-                    twoPartShip1.setY(i);
-                } else if (twoPartShip2.x() == -1) {
-                    twoPartShip2.setX(j);
-                    twoPartShip2.setY(i);
-                } else {
-                    twoPartShip3.setX(j);
-                    twoPartShip3.setY(i);
-                }
-            }
-
-    QPoint onePartShip1(-1, -1);
-    QPoint onePartShip2(-1, -1);
-    QPoint onePartShip3(-1, -1);
-    QPoint onePartShip4(-1, -1);
-
-    for (int i = 0; i < BOARD_SIZE; i++)
-        for (int j = 0; j < BOARD_SIZE; j++)
-            if (isShip(somePlayer, 1, j, i)) {
-                if (onePartShip1.x() == -1) {
-                    onePartShip1.setX(j);
-                    onePartShip1.setY(i);
-                } else if (onePartShip2.x() == -1) {
-                    onePartShip2.setX(j);
-                    onePartShip2.setY(i);
-                } else if (onePartShip3.x() == -1){
-                    onePartShip3.setX(j);
-                    onePartShip3.setY(i);
-                } else {
-                    onePartShip4.setX(j);
-                    onePartShip4.setY(i);
-                }
-            }
+    // Индексы для обхода списков координат кораблей
+    size_t idx3 = 0, idx2 = 0, idx1 = 0;
 
     for (Ship* ship : field->getFlot()) {
-        if (ship->getWeight() == 4) {
-            ship->setCoords(fourPartShip);
-        } else if (ship->getWeight() == 3) {
-            if (threePartShip1.x() != -1) {
-                ship->setCoords(threePartShip1);
-                threePartShip1.setX(-1);
-            } else {
-                ship->setCoords(threePartShip2);
+        int w = ship->getWeight();
+
+        if (w == 4 && !fourPartShips.empty()) {
+            ship->setCoords(fourPartShips[0]);
+        } else if (w == 3) {
+            if (idx3 < threePartShips.size()) {
+                ship->setCoords(threePartShips[idx3++]);
             }
-        } else if (ship->getWeight() == 2) {
-            if (twoPartShip1.x() != -1) {
-                ship->setCoords(twoPartShip1);
-                twoPartShip1.setX(-1);
-            } else if (twoPartShip2.x() != -1) {
-                ship->setCoords(twoPartShip2);
-                twoPartShip2.setX(-1);
-            } else {
-                ship->setCoords(twoPartShip3);
+        } else if (w == 2) {
+            if (idx2 < twoPartShips.size()) {
+                ship->setCoords(twoPartShips[idx2++]);
             }
-        } else {
-            if (onePartShip1.x() != -1) {
-                ship->setCoords(onePartShip1);
-                onePartShip1.setX(-1);
-            } else if (onePartShip2.x() != -1) {
-                ship->setCoords(onePartShip2);
-                onePartShip2.setX(-1);
-            } else if (onePartShip3.x() != -1) {
-                ship->setCoords(onePartShip3);
-                onePartShip3.setX(-1);
-            } else {
-                ship->setCoords(onePartShip4);
+        } else if (w == 1) {
+            if (idx1 < onePartShips.size()) {
+                ship->setCoords(onePartShips[idx1++]);
             }
         }
     }
