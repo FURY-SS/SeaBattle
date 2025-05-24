@@ -1,6 +1,5 @@
 #include "shotsstrategy.h"
 #include <ctime>
-#include <cstdlib>
 
 QPoint ManualShotStrategy::shot(QPoint point) {
 

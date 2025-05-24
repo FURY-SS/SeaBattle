@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QVector>
 #include <QPoint>
 #include "Field.h"
 #include "shotsstrategy.h"
@@ -30,7 +29,7 @@ public:
         strategy = new ManualShotStrategy();
     }
 
-    Ship* createShip(int w) override;
+    Ship* createShip(int w);
 };
 
 class AIPlayer : public Player {
@@ -38,7 +37,7 @@ public:
     AIPlayer() {
         strategy = new RandomShotStrategy();
     }
-    Ship* createShip(int w) override;
+    Ship* createShip(int w);
 };
 
-#endif // PLAYER_H
+#endif

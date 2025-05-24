@@ -1,5 +1,7 @@
 #include "ship.h"
 
+Ship::Ship() {}
+
 int Ship::getWeight() {
     return weight;
 }

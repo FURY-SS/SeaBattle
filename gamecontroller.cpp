@@ -28,8 +28,8 @@ int getShipCellsCount(Player* somePlayer) {
 
     Field* field = somePlayer->getField();
 
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
             if (field->getCellState(QPoint(j, i)) == Cell::SHIP)
                 count++;
         }
@@ -130,7 +130,7 @@ bool isShip(Player* somePlayer, int size, int x, int y) {
     int tmp = x;
     int num = 0;
 
-    while (field->getCellState(QPoint(tmp, y)) != Cell::EMPTY && tmp < 10) {
+    while (field->getCellState(QPoint(tmp, y)) != Cell::EMPTY && tmp < BOARD_SIZE) {
         tmp++;
         num++;
     }
@@ -150,7 +150,7 @@ bool isShip(Player* somePlayer, int size, int x, int y) {
     tmp = y;
     num = 0;
 
-    while (field->getCellState(QPoint(x, tmp)) != Cell::EMPTY && tmp < 10) {
+    while (field->getCellState(QPoint(x, tmp)) != Cell::EMPTY && tmp < BOARD_SIZE) {
         tmp++;
         num++;
     }
@@ -173,8 +173,8 @@ bool isShip(Player* somePlayer, int size, int x, int y) {
 int shipNum(Player* somePlayer, int size) {
     int shipNumber = 0;
 
-    for(int i = 0; i < 10; i++)
-        for(int j = 0; j < 10; j++)
+    for(int i = 0; i < BOARD_SIZE; i++)
+        for(int j = 0; j < BOARD_SIZE; j++)
             if(isShip(somePlayer, size, j, i))
                 shipNumber++;
 
@@ -253,8 +253,8 @@ void syncShipsCells(Player* somePlayer) {
     Field* field = somePlayer->getField();
 
     QPoint fourPartShip;
-    for (int i = 0; i < 10; i++)
-        for (int j = 0; j < 10; j++)
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
             if (isShip(somePlayer, 4, j, i)) {
                 fourPartShip.setX(j);
                 fourPartShip.setY(i);
@@ -262,8 +262,8 @@ void syncShipsCells(Player* somePlayer) {
 
     QPoint threePartShip1(-1, -1);
     QPoint threePartShip2(-1, -1);
-    for (int i = 0; i < 10; i++)
-        for (int j = 0; j < 10; j++)
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
             if (isShip(somePlayer, 3, j, i)) {
                 if (threePartShip1.x() == -1) {
                     threePartShip1.setX(j);
@@ -278,8 +278,8 @@ void syncShipsCells(Player* somePlayer) {
     QPoint twoPartShip2(-1, -1);
     QPoint twoPartShip3(-1, -1);
 
-    for (int i = 0; i < 10; i++)
-        for (int j = 0; j < 10; j++)
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
             if (isShip(somePlayer, 2, j, i)) {
                 if (twoPartShip1.x() == -1) {
                     twoPartShip1.setX(j);
@@ -298,8 +298,8 @@ void syncShipsCells(Player* somePlayer) {
     QPoint onePartShip3(-1, -1);
     QPoint onePartShip4(-1, -1);
 
-    for (int i = 0; i < 10; i++)
-        for (int j = 0; j < 10; j++)
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++)
             if (isShip(somePlayer, 1, j, i)) {
                 if (onePartShip1.x() == -1) {
                     onePartShip1.setX(j);

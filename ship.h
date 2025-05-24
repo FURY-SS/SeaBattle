@@ -1,7 +1,6 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include <QDebug>
 #include <QPoint>
 
 class Ship {
@@ -12,7 +11,7 @@ protected:
     int shipHealth;   // оставшееся здоровье
 
 public:
-    Ship() {};
+    Ship();
 
     int getWeight();
     void setCoords(QPoint point);
@@ -60,4 +59,4 @@ public:
     }
 };
 
-#endif // SHIP_H
+#endif

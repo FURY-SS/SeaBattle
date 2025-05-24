@@ -20,4 +20,6 @@ const int ENEMYFIELD_HALF_Y = 7 * CELL_SIZE_Y + 6;
 const int FIELD_WIDTH = 306;
 const int FIELD_HEIGHT = 316;
 
+const int BOARD_SIZE  = 10;
+
 #endif

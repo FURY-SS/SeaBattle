@@ -9,6 +9,7 @@
 #include <QString>
 #include "Images.h"
 #include "ship.h"
+#include "sizefields.h"
 
 // Состояния клетки поля
 enum Cell {

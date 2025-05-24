@@ -66,10 +66,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 
                 QPoint qp = getCoords(pos.x(), pos.y(), MYFIELD_X, MYFIELD_Y);
 
-                if (qp.x() == 10)
+                if (qp.x() == 10) {
                     qp.setX(9);
-                if (qp.y() == 10)
+                }
+
+                if (qp.y() == 10) {
                     qp.setY(9);
+                }
 
                 if (gameController->isPlayerEmptyCell(qp)) {
                     if (gameController->getPlayerShipCellsCount() < 20) {
@@ -94,10 +97,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             if (pos.x() >= ENEMYFIELD_X && pos.x() <= FIELD_WIDTH + ENEMYFIELD_X && pos.y() >= ENEMYFIELD_Y && pos.y() <= FIELD_HEIGHT + ENEMYFIELD_Y) {
                 QPoint qp = getCoords(pos.x(), pos.y(), ENEMYFIELD_X, ENEMYFIELD_Y);
 
-                if (qp.x() == 10)
+                if (qp.x() == 10) {
                     qp.setX(9);
-                if (qp.y() == 10)
+                }
+
+                if (qp.y() == 10) {
                     qp.setY(9);
+                }
 
                 gameController->playerShot(qp);
                 repaint();

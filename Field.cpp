@@ -9,8 +9,8 @@ void Field::addShip(Ship *ship) {
 }
 
 void Field::setCellState(QPoint point, Cell state) {
-    if (point.x() < 10 && point.x() >= 0 && point.y() < 10 && point.y() >= 0) {
-        cells[point.x() + 10 * point.y()] = state;
+    if (point.x() < BOARD_SIZE && point.x() >= 0 && point.y() < BOARD_SIZE && point.y() >= 0) {
+        cells[point.x() + BOARD_SIZE * point.y()] = state;
     }
 }
 
@@ -19,15 +19,15 @@ Cell Field::getCellState(QPoint point) {
         return Cell::EMPTY;
     }
 
-    return cells[point.x() + 10 * point.y()];
+    return cells[point.x() + BOARD_SIZE * point.y()];
 }
 
 void Field::printFieldStates() {
     // Вывод игрового поля в виде матрицы
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < BOARD_SIZE; i++) {
         QString str = "";
-        for (int j = 0; j < 10; j++) {
-            str += QString::number(cells[i * 10 + j]) + " ";
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            str += QString::number(cells[i * BOARD_SIZE + j]) + " ";
         }
         qDebug() << str;
     }

@@ -43,7 +43,7 @@ Ship* HumanPlayer::createShip(int w) {
     case 4:
         return new FourPartShip();
     default:
-        qDebug() << "Введен некорректный вес корабля";
+        qDebug() << "Введен некорректный размер корабля";
         return nullptr;
     }
 }
@@ -59,7 +59,7 @@ Ship* AIPlayer::createShip(int w) {
     case 4:
         return new FourPartShip();
     default:
-        qDebug() << "Введен некорректный вес корабля";
+        qDebug() << "Введен некорректный размер корабля";
         return nullptr;
     }
 }
