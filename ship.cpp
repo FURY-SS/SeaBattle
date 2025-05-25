@@ -29,3 +29,27 @@ void Ship::setDirection(bool dir) {
 bool Ship::getDirection() {
     return direction;
 }
+
+OnePartShip::OnePartShip() {
+    weight = 1;
+
+    shipHealth = weight;
+}
+
+TwoPartShip::TwoPartShip() {
+    weight = 2;
+
+    shipHealth = weight;
+}
+
+ThreePartShip::ThreePartShip() {
+    weight = 3;
+
+    shipHealth = weight;
+}
+
+FourPartShip::FourPartShip() {
+    weight = 4;
+
+    shipHealth = weight;
+}

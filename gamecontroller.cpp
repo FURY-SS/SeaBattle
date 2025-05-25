@@ -173,10 +173,13 @@ bool isShip(Player* somePlayer, int size, int x, int y) {
 int shipNum(Player* somePlayer, int size) {
     int shipNumber = 0;
 
-    for(int i = 0; i < BOARD_SIZE; i++)
-        for(int j = 0; j < BOARD_SIZE; j++)
-            if(isShip(somePlayer, size, j, i))
+    for(int i = 0; i < BOARD_SIZE; i++) {
+        for(int j = 0; j < BOARD_SIZE; j++) {
+            if(isShip(somePlayer, size, j, i)) {
                 shipNumber++;
+            }
+        }
+    }
 
     return shipNumber;
 }
@@ -249,7 +252,7 @@ void GameController::swapGameState() {
     }
 }
 
-// Возвращает список координат найденных кораблей с данным весом
+// Возвращает список координат найденных кораблей с данным размером
 std::vector<QPoint> findShipsCoords(Player* player, int shipWeight) {
     std::vector<QPoint> coordsList;
     for (int y = 0; y < BOARD_SIZE; y++) {
@@ -392,6 +395,7 @@ void GameController::botRandomShipsPlacing() {
                     int dy = horizontal ? y : y + i;
                     field->setCellState(QPoint(dx, dy), Cell::SHIP);
                 }
+
                 placed = true;
             }
         }
@@ -406,11 +410,11 @@ void GameController::takeShot(Player* whoShots, Player* whoseField, QPoint point
 
     if (field->getCellState(shotedPoint) == Cell::EMPTY) {
         field->setCellState(shotedPoint, Cell::DOT);
-        // TODO: переход к ходу бота
+
         swapGameState();
-        if (getGameState() == GameState::ENEMY_TURN)
+        if (getGameState() == GameState::ENEMY_TURN) {
             infoLabel->setText("Ход Бота!");
-        else {
+        } else {
             infoLabel->setText("Ваш ход!");
         }
 

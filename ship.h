@@ -25,38 +25,22 @@ public:
 
 class OnePartShip : public Ship {
 public:
-    OnePartShip() {
-        weight = 1;
-
-        shipHealth = weight;
-    }
+    OnePartShip();
 };
 
 class TwoPartShip : public Ship {
 public:
-    TwoPartShip() {
-        weight = 2;
-
-        shipHealth = weight;
-    }
+    TwoPartShip();
 };
 
 class ThreePartShip : public Ship {
 public:
-    ThreePartShip() {
-        weight = 3;
-
-        shipHealth = weight;
-    }
+    ThreePartShip();
 };
 
 class FourPartShip : public Ship {
 public:
-    FourPartShip() {
-        weight = 4;
-
-        shipHealth = weight;
-    }
+    FourPartShip();
 };
 
 #endif
